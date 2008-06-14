@@ -8,6 +8,7 @@
 #include "TheDoc.hpp"
 #include "TheView.hpp"
 #include <WCL/IniFile.hpp>
+#include <WCL/StrCvt.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Global variables.
@@ -18,17 +19,10 @@ TheApp App;
 ////////////////////////////////////////////////////////////////////////////////
 // Constants.
 
-#ifdef _DEBUG
-//! The application version string.
-const tchar* TheApp::VERSION = TXT("v1.0 [Debug]");
-#else
-//! The application version string.
-const tchar* TheApp::VERSION = TXT("v1.0");
-#endif
-
 //! The .ini file format version number.
 const tchar* TheApp::INI_FILE_VER = TXT("1.0");
 
+//! The maximum size of the MRU list.
 const int MRU_LIST_SIZE = ID_FILE_MRU_4-ID_FILE_MRU_1+1;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -36,9 +30,13 @@ const int MRU_LIST_SIZE = ID_FILE_MRU_4-ID_FILE_MRU_1+1;
 
 TheApp::TheApp()
 	: CSDIApp(m_oAppWnd, m_oAppCmds, MRU_LIST_SIZE)
-	, m_nMaxSummaryLen(50)
+	, m_nDefMaxItemLen(150)
+	, m_eDefLayout(TheView::VERTICAL)
+	, m_nDefSplitPos(500)
+	, m_vecDefColWidths(2)
 {
-
+	m_vecDefColWidths[0] = 100;
+	m_vecDefColWidths[1] = 100;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -88,6 +86,14 @@ bool TheApp::OnClose()
 	SaveConfig();
 
 	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Get the document.
+
+TheDoc* TheApp::Document() const
+{
+	return static_cast<TheDoc*>(m_pDoc);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -143,6 +149,26 @@ void TheApp::LoadConfig()
 
 	// Read the UI settings.
 	m_rcLastPos = oIniFile.ReadRect(TXT("UI"), TXT("MainWindow"), m_rcLastPos);
+	m_eDefLayout = static_cast<TheView::Layout>(oIniFile.ReadUInt(TXT("UI"), TXT("Layout"), m_eDefLayout));
+	m_nDefSplitPos = oIniFile.ReadUInt(TXT("UI"), TXT("SplitterPos"), m_nDefSplitPos);
+
+	CStrArray astrWidths = oIniFile.ReadStrings(TXT("UI"), TXT("AttribWidths"), TXT(','), TXT("100, 100"));
+
+	if (astrWidths.Size() == m_vecDefColWidths.size())
+	{
+		for (size_t i = 0; i < m_vecDefColWidths.size(); ++i)
+			m_vecDefColWidths[i] = tatoi(astrWidths[i]);
+	}
+
+	// Validate.
+	if ( (m_eDefLayout != TheView::VERTICAL) && (m_eDefLayout != TheView::HORIZONTAL) )
+		m_eDefLayout = TheView::VERTICAL;
+
+	for (Widths::iterator itWidth = m_vecDefColWidths.begin(); itWidth != m_vecDefColWidths.end(); ++itWidth)
+	{
+		if (*itWidth == 0)
+			*itWidth = 100;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -158,6 +184,14 @@ void TheApp::SaveConfig()
 	// Save the MRU list.
 	m_MRUList.Save(oIniFile);
 
+	CStrArray astrWidths;
+
+	for (Widths::const_iterator itWidth = m_vecDefColWidths.begin(); itWidth != m_vecDefColWidths.end(); ++itWidth)
+		astrWidths.Add(CStrCvt::FormatUInt(*itWidth));
+
 	// Write the UI settings.
 	oIniFile.WriteRect(TXT("UI"), TXT("MainWindow"), m_rcLastPos);
+	oIniFile.WriteUInt(TXT("UI"), TXT("Layout"), m_eDefLayout);
+	oIniFile.WriteUInt(TXT("UI"), TXT("SplitterPos"), m_nDefSplitPos);
+	oIniFile.WriteStrings(TXT("UI"), TXT("AttribWidths"), TXT(','), astrWidths);
 }

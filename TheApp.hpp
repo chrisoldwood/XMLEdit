@@ -14,6 +14,10 @@
 #include <WCL/SDIApp.hpp>
 #include "AppWnd.hpp"
 #include "AppCmds.hpp"
+#include "TheView.hpp"
+
+// Forward declarations.
+class TheDoc;
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The application singleton.
@@ -27,6 +31,12 @@ public:
 	//! Destructor.
 	virtual ~TheApp();
 
+	//! Get the document.
+	TheDoc* Document() const;
+
+	//! The array of ListView column widths.
+	typedef std::vector<uint> Widths;
+
 	//
 	// Application objects..
 	//
@@ -36,15 +46,11 @@ public:
 	//
 	// Application settings.
 	//
-	CRect		m_rcLastPos;		//!< Main window previous position.
-	uint		m_nMaxSummaryLen;	//!< Max chars in tree item summary.
-
-	//
-	// Public Constants.
-	//
-
-	//! The application version string.
-	static const tchar* VERSION;
+	CRect			m_rcLastPos;		//!< Main window previous position.
+	uint			m_nDefMaxItemLen;	//!< The default max chars in a tree item summary.
+	TheView::Layout	m_eDefLayout;		//!< The default main view layout.
+	uint			m_nDefSplitPos;		//!< The default splitter bar position.
+	Widths			m_vecDefColWidths;	//!< The default attributes view column widths.
 
 private:
 	//
