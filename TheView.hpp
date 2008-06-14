@@ -11,8 +11,10 @@
 #include <WCL/SplitWnd.hpp>
 #include <WCL/ListView.hpp>
 #include <WCL/EditBox.hpp>
-#include "TheDoc.hpp"
 #include "XmlTreeView.hpp"
+
+// Forward declarations.
+class TheDoc;
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The view for the document.
@@ -25,6 +27,13 @@ public:
 
 	//! Destructor.
 	virtual ~TheView();
+
+	//! The layout type.
+	enum Layout
+	{
+		HORIZONTAL	= 0,	//! Left to right layout.
+		VERTICAL	= 1,	//! Top to bottom layout.
+	};
 	
 	//
 	// Properties.
@@ -32,6 +41,16 @@ public:
 
 	//! Get the document.
 	TheDoc& Document();
+
+	//
+	// Methods.
+	//
+
+	//! Set the layout of the panes.
+	void SetLayout(Layout eLayout);
+
+	//! Activate the view.
+	void Activate();
 
 private:
 	//
@@ -41,6 +60,7 @@ private:
 	XmlTreeView		m_tvNodeTree;		//!< The DOM tree view.
 	CListView		m_lvAttributes;		//!< The node attributes view.
 	CEditBox		m_ebValue;			//!< The node value view.
+	CFont			m_fntControls;		//!< The font to use for the controls.
 
 	//! The ID of the main split window.
 	static const uint IDC_MAIN_SPLIT = 100;
@@ -51,12 +71,22 @@ private:
 	//! The ID of the node value control.
 	static const uint IDC_VALUE = 104;
 
+	//! The attributes columns.
+	enum Column
+	{
+		NAME_COLUMN		= 0,	//!< The attribute name column.
+		VALUE_COLUMN	= 1,	//!< The attribute value column.
+	};
+
 	//
 	// Message handlers.
 	//
 
 	//! Handle window creation.
 	virtual void OnCreate(const CRect& rcClient);
+
+	//! Handle window destruction.
+	virtual void OnDestroy();
 
 	//! Handle window resizing.
 	virtual void OnResize(int iFlag, const CSize& rNewSize);
@@ -78,13 +108,5 @@ private:
 	//! Allow the DOM tree-view to reflect events back.
 	friend class XmlTreeView;
 };
-
-////////////////////////////////////////////////////////////////////////////////
-//! Get the document.
-
-inline TheDoc& TheView::Document()
-{
-	return static_cast<TheDoc&>(m_Doc);
-}
 
 #endif // APP_THEVIEW_HPP

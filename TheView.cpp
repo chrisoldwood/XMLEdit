@@ -14,14 +14,17 @@
 #include <XML/CommentNode.hpp>
 #include <XML/ProcessingNode.hpp>
 #include <XML/DocTypeNode.hpp>
+#include <XML/CDataNode.hpp>
+#include <WCL/ScreenDC.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
 TheView::TheView(TheDoc& rDoc)
 	: CView(rDoc)
-	, m_wndMainSplit(CSplitWnd::VERTICAL, CSplitWnd::RESIZEABLE)
+	, m_wndMainSplit(CSplitWnd::RESIZEABLE)
 	, m_tvNodeTree(*this)
+	, m_fntControls(ANSI_FIXED_FONT)
 {
 /*
 	DEFINE_CTRLMSG_TABLE
@@ -37,40 +40,96 @@ TheView::~TheView()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Get the document.
+
+TheDoc& TheView::Document()
+{
+	return static_cast<TheDoc&>(m_Doc);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Set the layout of the panes.
+
+void TheView::SetLayout(Layout eLayout)
+{
+	// Switch to a horizontal layout AND not already?
+	if ( (eLayout == HORIZONTAL) && (m_wndMainSplit.SplitStyle() != CSplitWnd::VERTICAL) )
+	{
+		m_wndMainSplit.SetSplitStyle(CSplitWnd::VERTICAL);
+	}
+	// Switch to a vertical layout AND not already?
+	else if ( (eLayout == VERTICAL) && (m_wndMainSplit.SplitStyle() != CSplitWnd::HORIZONTAL) )
+	{
+		m_wndMainSplit.SetSplitStyle(CSplitWnd::HORIZONTAL);
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Activate the view.
+
+void TheView::Activate()
+{
+	m_tvNodeTree.Focus();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Handle window creation.
 
-void TheView::OnCreate(const CRect& /*rcClient*/)
+void TheView::OnCreate(const CRect& rcClient)
 {
-	CFont fntFixed(ANSI_FIXED_FONT);
-
 	// Create the splitter windows that fill the view.
-	m_wndMainSplit.Create(*this, IDC_MAIN_SPLIT, ClientRect());
+	m_wndMainSplit.Create(*this, IDC_MAIN_SPLIT, rcClient);
+
+	CRect rcEmpty;
 
 	// Create the child controls.
-	m_tvNodeTree.Create(m_wndMainSplit, IDC_DOM_TREE, m_wndMainSplit.ClientRect());
-	m_lvAttributes.Create(m_wndMainSplit, IDC_ATTRIBUTES, m_wndMainSplit.ClientRect());
-	m_ebValue.Create(m_wndMainSplit, IDC_VALUE, m_wndMainSplit.ClientRect(), WS_EX_CLIENTEDGE,
+	m_tvNodeTree.Create(m_wndMainSplit, IDC_DOM_TREE, rcEmpty, WS_EX_CLIENTEDGE,
+										WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_VISIBLE
+										| WS_BORDER | TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_SHOWSELALWAYS);
+
+	m_lvAttributes.Create(m_wndMainSplit, IDC_ATTRIBUTES, rcEmpty, WS_EX_CLIENTEDGE, 
+										WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_VISIBLE
+										| WS_BORDER | LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_NOSORTHEADER);
+
+	m_ebValue.Create(m_wndMainSplit, IDC_VALUE, rcEmpty, WS_EX_CLIENTEDGE,
 										WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_VISIBLE
 										| ES_MULTILINE | ES_AUTOVSCROLL | ES_LEFT);
 
 	// Add the child controls to the splitters.
 	m_wndMainSplit.SetPane(CSplitWnd::LEFT_PANE, &m_tvNodeTree);
-	m_wndMainSplit.SetSizingBarPos(500);
+	m_wndMainSplit.SetSizingBarPos(App.m_nDefSplitPos);
+	SetLayout(App.m_eDefLayout);
 
 	// Initialise the controls.
-	m_tvNodeTree.Font(fntFixed);
+	m_fntControls.Create(CLogFont(TXT("Lucida Console"), -CScreenDC().PointSizeToPixels(10)));
+
+	m_tvNodeTree.Font(m_fntControls);
 	m_tvNodeTree.SetImageList(TVSIL_NORMAL, IDB_NODE_ICONS, 16, RGB(255, 255, 255));
 
-	m_lvAttributes.Font(fntFixed);
-	m_lvAttributes.InsertColumn(0, TXT("Name"), 100, LVCFMT_LEFT);
-	m_lvAttributes.InsertColumn(1, TXT("Value"), 100, LVCFMT_LEFT);
+	m_lvAttributes.Font(m_fntControls);
+	m_lvAttributes.InsertColumn(NAME_COLUMN,  TXT("Name"),  App.m_vecDefColWidths[NAME_COLUMN],  LVCFMT_LEFT);
+	m_lvAttributes.InsertColumn(VALUE_COLUMN, TXT("Value"), App.m_vecDefColWidths[VALUE_COLUMN], LVCFMT_LEFT);
 	m_lvAttributes.FullRowSelect(true);
 
-	m_ebValue.Font(fntFixed);
+	m_ebValue.Font(m_fntControls);
 	m_ebValue.ReadOnly(true);
+
+	// Update the menu.
+	App.m_oAppWnd.m_oMenu.CheckCmd(ID_VIEW_HORZ, true);
 
 	// Display the current DOM.
 	InitialiseView();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Handle window destruction.
+
+void TheView::OnDestroy()
+{
+	// Save window settings.
+	App.m_nDefSplitPos = m_wndMainSplit.SizingBarPos();
+	App.m_vecDefColWidths[NAME_COLUMN]  = m_lvAttributes.ColumnWidth(NAME_COLUMN);
+	App.m_vecDefColWidths[VALUE_COLUMN] = m_lvAttributes.ColumnWidth(VALUE_COLUMN);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -109,6 +168,10 @@ void TheView::OnNodeSelected(NMTREEVIEW& oMsg)
 		{
 			vAttribs = Core::static_ptr_cast<XML::ProcessingNode>(pNode)->GetAttributes();
 		}
+		else
+		{
+			ASSERT_FALSE();
+		}
 
 		// Switch info controls and display attributes.
 		m_wndMainSplit.SetPane(CSplitWnd::RIGHT_PANE, &m_lvAttributes);
@@ -126,7 +189,7 @@ void TheView::OnNodeSelected(NMTREEVIEW& oMsg)
 	}
 	// Is content?
 	else if ( (eType == XML::TEXT_NODE) || (eType == XML::COMMENT_NODE)
-		   || (eType == XML::DOCTYPE_NODE) )
+		   || (eType == XML::DOCTYPE_NODE) || (eType == XML::CDATA_NODE) )
 	{
 		tstring strText;
 
@@ -142,6 +205,14 @@ void TheView::OnNodeSelected(NMTREEVIEW& oMsg)
 		else if (eType == XML::DOCTYPE_NODE)
 		{
 			strText = Core::static_ptr_cast<XML::DocTypeNode>(pNode)->Declaration();
+		}
+		else if (eType == XML::CDATA_NODE)
+		{
+			strText = Core::static_ptr_cast<XML::CDataNode>(pNode)->Text();
+		}
+		else
+		{
+			ASSERT_FALSE();
 		}
 
 		// Switch info controls and display text.
@@ -160,5 +231,10 @@ void TheView::OnNodeSelected(NMTREEVIEW& oMsg)
 
 void TheView::InitialiseView()
 {
+	// Load the DOM.
 	m_tvNodeTree.Refresh();
+	m_tvNodeTree.Select(m_tvNodeTree.Root());
+
+	// Set initial focus.
+	Activate();
 }
