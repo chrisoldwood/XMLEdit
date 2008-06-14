@@ -7,6 +7,7 @@
 #include "AppCmds.hpp"
 #include "TheApp.hpp"
 #include "TheDoc.hpp"
+#include "TheView.hpp"
 #include "AboutDlg.hpp"
 
 //! The ID of the first MRU command.
@@ -23,13 +24,16 @@ AppCmds::AppCmds()
 	// Define the command table.
 	DEFINE_CMD_TABLE
 		// File menu.
-		CMD_ENTRY(ID_FILE_NEW,					&AppCmds::OnFileNew,		NULL,						 0)
+		CMD_ENTRY(ID_FILE_NEW,					&AppCmds::OnFileNew,		&AppCmds::OnUIFileNew,		 0)
 		CMD_ENTRY(ID_FILE_OPEN,					&AppCmds::OnFileOpen,		NULL,						 1)
 		CMD_ENTRY(ID_FILE_SAVE,					&AppCmds::OnFileSave,		&AppCmds::OnUIFileSave,		 2)
 		CMD_ENTRY(ID_FILE_SAVEAS,				&AppCmds::OnFileSaveAs,		&AppCmds::OnUIFileSaveAs,	-1)
 		CMD_ENTRY(ID_FILE_CLOSE,				&AppCmds::OnFileClose,		&AppCmds::OnUIFileClose,	 1)
 		CMD_RANGE(ID_MRU_FIRST,	ID_MRU_LAST,	&AppCmds::OnFileOpenMRU,	&AppCmds::OnUIFileOpenMRU,	-1)
 		CMD_ENTRY(ID_FILE_EXIT,					&AppCmds::OnFileExit,		NULL,						-1)
+		// View menu.
+		CMD_ENTRY(ID_VIEW_HORZ,					&AppCmds::OnViewHorz,		&AppCmds::OnUIViewHorz,		-1)
+		CMD_ENTRY(ID_VIEW_VERT,					&AppCmds::OnViewVert,		&AppCmds::OnUIViewVert,		-1)
 		// Help menu.
 		CMD_ENTRY(ID_HELP_ABOUT,				&AppCmds::OnHelpAbout,		NULL,						10)
 	END_CMD_TABLE
@@ -99,6 +103,32 @@ void AppCmds::OnFileExit()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Change the layout to the horizontal one.
+
+void AppCmds::OnViewHorz()
+{
+	ASSERT(App.m_pView != nullptr);
+
+	App.m_oAppWnd.m_oMenu.CheckCmd(ID_VIEW_HORZ, true);
+	App.m_oAppWnd.m_oMenu.CheckCmd(ID_VIEW_VERT, false);
+
+	App.Document()->View()->SetLayout(TheView::HORIZONTAL);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Change the layout to the vertical one.
+
+void AppCmds::OnViewVert()
+{
+	ASSERT(App.m_pView != nullptr);
+
+	App.m_oAppWnd.m_oMenu.CheckCmd(ID_VIEW_HORZ, false);
+	App.m_oAppWnd.m_oMenu.CheckCmd(ID_VIEW_VERT, true);
+
+	App.Document()->View()->SetLayout(TheView::VERTICAL);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Show the about dialog.
 
 void AppCmds::OnHelpAbout()
@@ -111,13 +141,24 @@ void AppCmds::OnHelpAbout()
 ////////////////////////////////////////////////////////////////////////////////
 //! Update the command UI.
 
+void AppCmds::OnUIFileNew()
+{
+	App.m_oAppWnd.m_oMenu.EnableCmd(ID_FILE_NEW, false);
+	App.m_oAppWnd.m_oToolbar.m_btnNew.Enable(false);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Update the command UI.
+
 void AppCmds::OnUIFileSave()
 {
-	bool bDocOpen  = (App.m_pDoc != NULL);
-	bool bModified = (bDocOpen && App.m_pDoc->Modified());
+//	bool bDocOpen  = (App.m_pDoc != nullptr);
+//	bool bModified = (bDocOpen && App.m_pDoc->Modified());
 
-	App.m_oAppWnd.m_oMenu.EnableCmd(ID_FILE_SAVE, (bDocOpen && bModified));
-	App.m_oAppWnd.m_oToolbar.m_btnSave.Enable(bDocOpen && bModified);
+//	App.m_oAppWnd.m_oMenu.EnableCmd(ID_FILE_SAVE, (bDocOpen && bModified));
+//	App.m_oAppWnd.m_oToolbar.m_btnSave.Enable(bDocOpen && bModified);
+	App.m_oAppWnd.m_oMenu.EnableCmd(ID_FILE_SAVE, false);
+	App.m_oAppWnd.m_oToolbar.m_btnSave.Enable(false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -125,9 +166,10 @@ void AppCmds::OnUIFileSave()
 
 void AppCmds::OnUIFileSaveAs()
 {
-	bool bDocOpen = (App.m_pDoc != NULL);
+//	bool bDocOpen = (App.m_pDoc != nullptr);
 
-	App.m_oAppWnd.m_oMenu.EnableCmd(ID_FILE_SAVEAS, bDocOpen);
+//	App.m_oAppWnd.m_oMenu.EnableCmd(ID_FILE_SAVEAS, bDocOpen);
+	App.m_oAppWnd.m_oMenu.EnableCmd(ID_FILE_SAVEAS, false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -135,7 +177,7 @@ void AppCmds::OnUIFileSaveAs()
 
 void AppCmds::OnUIFileClose()
 {
-	bool bDocOpen = (App.m_pDoc != NULL);
+	bool bDocOpen = (App.m_pDoc != nullptr);
 
 	App.m_oAppWnd.m_oMenu.EnableCmd(ID_FILE_CLOSE, bDocOpen);
 }
@@ -146,4 +188,24 @@ void AppCmds::OnUIFileClose()
 void AppCmds::OnUIFileOpenMRU()
 {
 	App.m_MRUList.UpdateMenu(App.m_oAppWnd.m_oMenu, ID_MRU_FIRST);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Update the command UI.
+
+void AppCmds::OnUIViewHorz()
+{
+	bool bDocOpen = (App.m_pDoc != nullptr);
+
+	App.m_oAppWnd.m_oMenu.EnableCmd(ID_VIEW_HORZ, bDocOpen);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Update the command UI.
+
+void AppCmds::OnUIViewVert()
+{
+	bool bDocOpen = (App.m_pDoc != nullptr);
+
+	App.m_oAppWnd.m_oMenu.EnableCmd(ID_VIEW_VERT, bDocOpen);
 }

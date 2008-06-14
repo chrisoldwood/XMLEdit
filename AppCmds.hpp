@@ -50,12 +50,21 @@ public:
 	//! Close the application.
 	void OnFileExit();
 
+	//! Change the layout to the horizontal one.
+	void OnViewHorz();
+
+	//! Change the layout to the vertical one.
+	void OnViewVert();
+
 	//! Show the about dialog.
 	void OnHelpAbout();
 
 	//
 	// UI handlers.
 	//
+
+	//! Update the command UI.
+	void OnUIFileNew();
 
 	//! Update the command UI.
 	void OnUIFileSave();
@@ -68,6 +77,12 @@ public:
 
 	//! Update the command UI.
 	void OnUIFileOpenMRU();
+
+	//! Update the command UI.
+	void OnUIViewHorz();
+
+	//! Update the command UI.
+	void OnUIViewVert();
 };
 
 #endif // APP_APPCMDS_HPP
