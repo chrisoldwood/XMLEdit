@@ -1,17 +1,17 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "..\Lib\Core\Core.vcproj", "{790BC113-52FB-4565-8968-79B8B011C520}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Lib\Core\Core.vcproj", "{790BC113-52FB-4565-8968-79B8B011C520}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Wcl", "..\Lib\WCL\Wcl.vcproj", "{9B0335B6-93BE-4604-8497-27431874D758}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Wcl", "Lib\WCL\Wcl.vcproj", "{9B0335B6-93BE-4604-8497-27431874D758}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XML", "..\Lib\XML\XML.vcproj", "{2BF56C15-FDAD-480B-9C25-951E43773ED6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XML", "Lib\XML\XML.vcproj", "{2BF56C15-FDAD-480B-9C25-951E43773ED6}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XMLEdit", "XMLEdit.vcproj", "{8D5B36C1-CEDA-4660-8F7C-7978DA5663A5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XMLEdit", "XMLEdit\XMLEdit.vcproj", "{8D5B36C1-CEDA-4660-8F7C-7978DA5663A5}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -20,25 +20,21 @@ Global
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
 	EndGlobalSection
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 5
+		SccNumberOfProjects = 3
 		SccProjectUniqueName0 = Lib\\Core\\Core.vcproj
 		SccProjectName0 = \u0022$/Win32/Lib/Core\u0022,\u0020QWDAAAAA
 		SccLocalPath0 = Lib\\Core
+		SccProvider0 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
 		CanCheckoutShared = true
 		SccProjectUniqueName1 = Lib\\WCL\\Wcl.vcproj
 		SccProjectName1 = \u0022$/Win32/Lib/WCL\u0022,\u0020HPAAAAAA
 		SccLocalPath1 = Lib\\WCL
+		SccProvider1 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
 		CanCheckoutShared = true
 		SccProjectUniqueName2 = Lib\\XML\\XML.vcproj
 		SccProjectName2 = \u0022$/Win32/Lib/XML\u0022,\u0020RWDAAAAA
 		SccLocalPath2 = Lib\\XML
-		CanCheckoutShared = true
-		SccLocalPath3 = .
-		CanCheckoutShared = true
-		SolutionUniqueID = {C7C1FED3-1302-45F9-B449-CBB847B6D545}
-		SccProjectUniqueName4 = XMLEdit\\XMLEdit.vcproj
-		SccProjectName4 = \u0022$/Win32/XMLEdit\u0022,\u0020NREAAAAA
-		SccLocalPath4 = XMLEdit
+		SccProvider2 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
 		CanCheckoutShared = true
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
