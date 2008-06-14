@@ -58,6 +58,9 @@ private:
 
 	//! Handle the window closing.
 	virtual void OnClose();
+
+	//! Handle the window being activated.
+	virtual void OnActivate(bool bActivating);
 };
 
 #endif // APP_APPWND_HPP

@@ -6,6 +6,7 @@
 #include "Common.hpp"
 #include "AppWnd.hpp"
 #include "TheApp.hpp"
+#include "TheDoc.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
@@ -53,4 +54,13 @@ void AppWnd::OnClose()
 {
 	// Fetch windows final placement.
 	App.m_rcLastPos = Placement();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Handle the window being activated.
+
+void AppWnd::OnActivate(bool bActivating)
+{
+	if ( (bActivating) && (App.Document() != nullptr) )
+		App.Document()->View()->Activate();
 }
