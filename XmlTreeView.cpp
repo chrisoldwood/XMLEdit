@@ -12,6 +12,7 @@
 #include <XML/CommentNode.hpp>
 #include <XML/ProcessingNode.hpp>
 #include "TheApp.hpp"
+#include "TheDoc.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -182,6 +183,11 @@ void XmlTreeView::UpdateNode(HTREEITEM hItem, const XML::NodePtr& pNode)
 		strItem = TXT("DOCTYPE");
 		nImage  = 7;
 	}
+	else if (eType == XML::CDATA_NODE)
+	{
+		strItem = TXT("CDATA");
+		nImage  = 8;
+	}
 	else
 	{
 		ASSERT_FALSE();
@@ -235,7 +241,7 @@ void XmlTreeView::PostProcessSummary(tstring& str)
 	// Find if only whitespace characters.
 	for (tstring::const_iterator it = str.begin(); ((it != str.end()) && bWhitespaceOnly); ++it)
 	{
-		if (!isspace(static_cast<uint>(*it)))
+		if (!tisspace(static_cast<utchar>(*it)))
 			bWhitespaceOnly = false;
 	}
 
@@ -247,9 +253,9 @@ void XmlTreeView::PostProcessSummary(tstring& str)
 	}
 
 	// Trim string.
-	if (str.length() > App.m_nMaxSummaryLen)
+	if (str.length() > App.m_nDefMaxItemLen)
 	{
-		str.erase(App.m_nMaxSummaryLen, str.length()-App.m_nMaxSummaryLen);
+		str.erase(App.m_nDefMaxItemLen, str.length()-App.m_nDefMaxItemLen);
 
 		str += TXT("...");
 	}
