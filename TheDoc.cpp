@@ -5,6 +5,7 @@
 
 #include "Common.hpp"
 #include "TheDoc.hpp"
+#include "TheView.hpp"
 #include <WCL/App.hpp>
 #include <WCL/FrameWnd.hpp>
 #include <WCL/File.hpp>
@@ -23,6 +24,14 @@ TheDoc::TheDoc()
 
 TheDoc::~TheDoc()
 {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Get the view.
+
+TheView* TheDoc::View() const
+{
+	return static_cast<TheView*>(m_pView);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

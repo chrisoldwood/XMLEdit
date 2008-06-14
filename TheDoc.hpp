@@ -14,6 +14,9 @@
 #include <WCL/SDIDoc.hpp>
 #include <XML/Document.hpp>
 
+// Forward declarations.
+class TheView;
+
 ////////////////////////////////////////////////////////////////////////////////
 //! The document.
 
@@ -29,6 +32,9 @@ public:
 	//
 	// Properties.
 	//
+
+	//! Get the view.
+	TheView* View() const;
 
 	//! Checks if the document has been modified.
 	virtual bool Modified() const;
