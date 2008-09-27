@@ -78,10 +78,17 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "E&xit\tAlt+F4",               ID_FILE_EXIT
     END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&Find...\tCtrl+F",            ID_EDIT_FIND
+        MENUITEM "Find &Next\tF3",              ID_EDIT_FIND_NEXT
+    END
     POPUP "&View"
     BEGIN
         MENUITEM "&Left/Right Layout",          ID_VIEW_HORZ
         MENUITEM "&Top/Bottom Layout",          ID_VIEW_VERT
+        MENUITEM SEPARATOR
+        MENUITEM "&Node Path",                  ID_VIEW_NODE_PATH
     END
     POPUP "&Help"
     BEGIN
@@ -120,6 +127,28 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,35,100,50,15
 END
 
+IDD_NODE_PATH DIALOGEX 0, 0, 222, 55
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Node Path"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Close",IDCANCEL,160,30,50,14
+    EDITTEXT        IDC_PATH,10,10,200,14,ES_AUTOHSCROLL | ES_READONLY
+END
+
+IDD_FIND DIALOGEX 0, 0, 222, 66
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Find"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "XPath Expression:",IDC_STATIC,10,10,100,8
+    EDITTEXT        IDC_PATH,10,20,200,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,105,40,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,160,40,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -136,11 +165,13 @@ IDB_NODE_ICONS          BITMAP                  "NodeIcons.bmp"
 
 IDR_APPACCEL ACCELERATORS 
 BEGIN
+    VK_F4,          ID_FILE_CLOSE,          VIRTKEY, CONTROL, NOINVERT
     "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
     "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
     "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
     VK_F1,          ID_HELP_CONTENTS,       VIRTKEY, NOINVERT
-    VK_F4,          ID_FILE_CLOSE,          VIRTKEY, CONTROL, NOINVERT
+    "F",            ID_EDIT_FIND,           VIRTKEY, CONTROL, NOINVERT
+    VK_F3,          ID_EDIT_FIND_NEXT,      VIRTKEY, NOINVERT
 END
 
 
@@ -155,6 +186,22 @@ BEGIN
     IDD_ABOUT, DIALOG
     BEGIN
         BOTTOMMARGIN, 106
+    END
+
+    IDD_NODE_PATH, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 215
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_FIND, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 215
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 59
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -221,12 +268,16 @@ END
 STRINGTABLE 
 BEGIN
     ID_VIEW_POPUP           "View options"
+    ID_VIEW_HORZ            "Show the tree on the left and attributes on the right"
+    ID_VIEW_VERT            "Show the tree at the top and attributes on the bottom"
+    ID_VIEW_NODE_PATH       "Show the simple XPath expression to the node"
 END
 
 STRINGTABLE 
 BEGIN
-    ID_VIEW_VERT            "Show the tree at the top and attributes on the bottom"
-    ID_VIEW_HORZ            "Show the tree on the left and attributes on the right"
+    ID_EDIT_POPUP           "Edit options"
+    ID_EDIT_FIND            "Find the first node matching an XPath expression"
+    ID_EDIT_FIND_NEXT       "Find the next node matching a previous query"
 END
 
 #endif    // English (U.K.) resources

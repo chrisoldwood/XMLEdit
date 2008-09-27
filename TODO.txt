@@ -5,3 +5,6 @@
 - Hide namespace names
 
 - Font selection
+
+- Check split size on first run.
+
