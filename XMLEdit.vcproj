@@ -154,6 +154,9 @@
 				RelativePath=".\AppWnd.cpp">
 			</File>
 			<File
+				RelativePath=".\FindDlg.cpp">
+			</File>
+			<File
 				RelativePath=".\pch.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -167,6 +170,9 @@
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\ShowPathDlg.cpp">
 			</File>
 			<File
 				RelativePath=".\TheApp.cpp">
@@ -199,6 +205,12 @@
 			</File>
 			<File
 				RelativePath=".\Common.hpp">
+			</File>
+			<File
+				RelativePath=".\FindDlg.hpp">
+			</File>
+			<File
+				RelativePath=".\ShowPathDlg.hpp">
 			</File>
 			<File
 				RelativePath=".\TheApp.hpp">
