@@ -42,6 +42,12 @@ public:
 	//! Get the document.
 	TheDoc& Document();
 
+	//! Get the selected node.
+	XML::NodePtr Selection() const;
+
+	//! Set the selected node.
+	void SetSelection(const XML::NodePtr& pNode);
+
 	//
 	// Methods.
 	//

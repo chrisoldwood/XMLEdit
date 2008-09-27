@@ -30,6 +30,31 @@ XmlTreeView::~XmlTreeView()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Get the current selected node.
+
+XML::NodePtr XmlTreeView::Selection() const
+{
+	HTREEITEM hSelItem = TreeView::Selection();
+
+	XML::NodePtr pNode;
+
+	if (hSelItem != NULL)
+		pNode = GetItemNode(hSelItem);
+
+	return pNode;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Set the selected node.
+
+void XmlTreeView::SetSelection(const XML::NodePtr& pNode)
+{
+	HTREEITEM hItem = GetNodeItem(pNode);
+
+	Select(hItem);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Refresh the entire document.
 
 void XmlTreeView::Refresh()
@@ -66,13 +91,25 @@ void XmlTreeView::AddItemNodeMapping(HTREEITEM hItem, const XML::NodePtr& pNode)
 ////////////////////////////////////////////////////////////////////////////////
 //! Get the XML node for the tree item.
 
-XML::NodePtr XmlTreeView::GetItemNode(HTREEITEM hItem)
+XML::NodePtr XmlTreeView::GetItemNode(HTREEITEM hItem) const
 {
 	ItemNodeMap::const_iterator it = m_mapItemNode.find(hItem);
 
 	ASSERT(it != m_mapItemNode.end());
 
 	return XML::NodePtr(it->second, true);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Get the tree item for the XML node.
+
+HTREEITEM XmlTreeView::GetNodeItem(const XML::NodePtr& pNode) const
+{
+	NodeItemMap::const_iterator it = m_mapNodeItem.find(pNode.Get());
+
+	ASSERT(it != m_mapNodeItem.end());
+
+	return it->second;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

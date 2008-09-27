@@ -32,6 +32,16 @@ public:
 	virtual	~XmlTreeView();
 
 	//
+	// Properties.
+	//
+
+	//! Get the current selected node.
+	XML::NodePtr Selection() const;
+
+	//! Set the selected node.
+	void SetSelection(const XML::NodePtr& pNode);
+
+	//
 	// Methods.
 	//
 
@@ -39,7 +49,10 @@ public:
 	void Refresh();
 
 	//! Get the XML node for the tree item.
-	XML::NodePtr GetItemNode(HTREEITEM hItem); // throw()
+	XML::NodePtr GetItemNode(HTREEITEM hItem) const; // throw()
+
+	//! Get the tree item for the XML node.
+	HTREEITEM GetNodeItem(const XML::NodePtr& pNode) const; // throw()
 
 private:
 	//! A map of tree item to node ptr.

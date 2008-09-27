@@ -48,6 +48,22 @@ TheDoc& TheView::Document()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Get the selected node.
+
+XML::NodePtr TheView::Selection() const
+{
+	return m_tvNodeTree.Selection();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Set the selected node.
+
+void TheView::SetSelection(const XML::NodePtr& pNode)
+{
+	m_tvNodeTree.SetSelection(pNode);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Set the layout of the panes.
 
 void TheView::SetLayout(Layout eLayout)
