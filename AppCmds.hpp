@@ -50,11 +50,20 @@ public:
 	//! Close the application.
 	void OnFileExit();
 
+	//! Find the first node that matches an XPath expression.
+	void OnEditFind();
+
+	//! Find the next node that matches the previous expression.
+	void OnEditFindNext();
+
 	//! Change the layout to the horizontal one.
 	void OnViewHorz();
 
 	//! Change the layout to the vertical one.
 	void OnViewVert();
+
+	//! Show the full path to the select node.
+	void OnViewNodePath();
 
 	//! Show the about dialog.
 	void OnHelpAbout();
@@ -79,10 +88,19 @@ public:
 	void OnUIFileOpenMRU();
 
 	//! Update the command UI.
+	void OnUIEditFind();
+
+	//! Update the command UI.
+	void OnUIEditFindNext();
+
+	//! Update the command UI.
 	void OnUIViewHorz();
 
 	//! Update the command UI.
 	void OnUIViewVert();
+
+	//! Update the command UI.
+	void OnUIViewNodePath();
 };
 
 #endif // APP_APPCMDS_HPP
