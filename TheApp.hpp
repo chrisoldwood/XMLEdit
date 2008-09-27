@@ -31,7 +31,7 @@ public:
 	//! Destructor.
 	virtual ~TheApp();
 
-	//! Get the document.
+	//! Get the current open document.
 	TheDoc* Document() const;
 
 	//! The array of ListView column widths.
@@ -51,6 +51,14 @@ public:
 	TheView::Layout	m_eDefLayout;		//!< The default main view layout.
 	uint			m_nDefSplitPos;		//!< The default splitter bar position.
 	Widths			m_vecDefColWidths;	//!< The default attributes view column widths.
+
+	//
+	// Find state.
+	//
+	typedef std::list<XML::NodePtr> NodesList;
+
+	tstring			m_strLastSearch;	//!< The last find XPath query.
+	NodesList		m_lstQueryNodes;	//!< The list of nodes found in the last query.
 
 private:
 	//

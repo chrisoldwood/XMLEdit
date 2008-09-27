@@ -89,7 +89,7 @@ bool TheApp::OnClose()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Get the document.
+//! Get the current open document.
 
 TheDoc* TheApp::Document() const
 {
