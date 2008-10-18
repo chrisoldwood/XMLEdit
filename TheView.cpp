@@ -93,6 +93,10 @@ void TheView::Activate()
 
 void TheView::OnCreate(const CRect& rcClient)
 {
+	// On first run ensure splitter is visible.
+	if (App.m_nDefSplitPos == 0)
+		App.m_nDefSplitPos = (rcClient.Height() * 3) / 4;
+
 	// Create the splitter windows that fill the view.
 	m_wndMainSplit.Create(*this, IDC_MAIN_SPLIT, rcClient);
 

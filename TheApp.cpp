@@ -32,7 +32,7 @@ TheApp::TheApp()
 	: CSDIApp(m_oAppWnd, m_oAppCmds, MRU_LIST_SIZE)
 	, m_nDefMaxItemLen(150)
 	, m_eDefLayout(TheView::VERTICAL)
-	, m_nDefSplitPos(500)
+	, m_nDefSplitPos(0)
 	, m_vecDefColWidths(2)
 {
 	m_vecDefColWidths[0] = 100;
