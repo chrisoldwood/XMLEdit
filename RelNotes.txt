@@ -1,0 +1,10 @@
+Version 0.5
+===========
+
+- First public alpha.
+
+
+Chris Oldwood 
+[gort@cix.co.uk]
+
+29th September 2008
