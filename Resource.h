@@ -17,7 +17,12 @@
 #define ID_FILE_MRU_2                   107
 #define ID_FILE_MRU_3                   108
 #define ID_FILE_MRU_4                   109
-#define ID_FILE_EXIT                    110
+#define ID_FILE_MRU_5                   110
+#define ID_FILE_MRU_6                   111
+#define ID_FILE_MRU_7                   112
+#define ID_FILE_MRU_8                   113
+#define ID_FILE_MRU_9                   114
+#define ID_FILE_EXIT                    120
 #define IDD_NODE_PATH                   132
 #define IDD_FIND                        133
 #define ID_EDIT_POPUP                   200
