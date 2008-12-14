@@ -181,10 +181,10 @@ void AppCmds::OnViewHorz()
 {
 	ASSERT(App.m_pView != nullptr);
 
-	App.m_oAppWnd.m_oMenu.CheckCmd(ID_VIEW_HORZ, true);
-	App.m_oAppWnd.m_oMenu.CheckCmd(ID_VIEW_VERT, false);
+	App.m_eDefLayout = TheView::HORIZONTAL;
+	App.Document()->View()->SetLayout(App.m_eDefLayout);
 
-	App.Document()->View()->SetLayout(TheView::HORIZONTAL);
+	UpdateUI();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -194,10 +194,10 @@ void AppCmds::OnViewVert()
 {
 	ASSERT(App.m_pView != nullptr);
 
-	App.m_oAppWnd.m_oMenu.CheckCmd(ID_VIEW_HORZ, false);
-	App.m_oAppWnd.m_oMenu.CheckCmd(ID_VIEW_VERT, true);
+	App.m_eDefLayout = TheView::VERTICAL;
+	App.Document()->View()->SetLayout(App.m_eDefLayout);
 
-	App.Document()->View()->SetLayout(TheView::VERTICAL);
+	UpdateUI();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -317,9 +317,11 @@ void AppCmds::OnUIEditFindNext()
 
 void AppCmds::OnUIViewHorz()
 {
-	bool bDocOpen = (App.m_pDoc != nullptr);
+	bool docOpen  = (App.m_pDoc != nullptr);
+	bool isLayout = (App.m_eDefLayout == TheView::HORIZONTAL);
 
-	App.m_oAppWnd.m_oMenu.EnableCmd(ID_VIEW_HORZ, bDocOpen);
+	App.m_oAppWnd.m_oMenu.EnableCmd(ID_VIEW_HORZ, docOpen);
+	App.m_oAppWnd.m_oMenu.CheckCmd(ID_VIEW_HORZ, docOpen && isLayout);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -327,9 +329,11 @@ void AppCmds::OnUIViewHorz()
 
 void AppCmds::OnUIViewVert()
 {
-	bool bDocOpen = (App.m_pDoc != nullptr);
+	bool docOpen  = (App.m_pDoc != nullptr);
+	bool isLayout = (App.m_eDefLayout == TheView::VERTICAL);
 
-	App.m_oAppWnd.m_oMenu.EnableCmd(ID_VIEW_VERT, bDocOpen);
+	App.m_oAppWnd.m_oMenu.EnableCmd(ID_VIEW_VERT, docOpen);
+	App.m_oAppWnd.m_oMenu.CheckCmd(ID_VIEW_VERT, docOpen && isLayout);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
