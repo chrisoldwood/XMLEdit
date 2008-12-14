@@ -92,13 +92,6 @@ private:
 
 	//! Save the application settings.
 	void SaveConfig();
-
-	//
-	// Constants.
-	//
-
-	//! The .ini file format version number.
-	static const tchar* INI_FILE_VER;
 };
 
 //! The application singleton instance.

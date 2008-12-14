@@ -7,8 +7,12 @@
 #include "TheApp.hpp"
 #include "TheDoc.hpp"
 #include "TheView.hpp"
-#include <WCL/IniFile.hpp>
-#include <WCL/StrCvt.hpp>
+//#include <WCL/IniFile.hpp>
+//#include <WCL/StrCvt.hpp>
+#include <WCL/AppConfig.hpp>
+#include <Core/ConfigurationException.hpp>
+#include <Core/StringUtils.hpp>
+#include <WCL/BusyCursor.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Global variables.
@@ -19,11 +23,15 @@ TheApp App;
 ////////////////////////////////////////////////////////////////////////////////
 // Constants.
 
-//! The .ini file format version number.
-const tchar* TheApp::INI_FILE_VER = TXT("1.0");
+//! The configuration data publisher name.
+const tchar* PUBLISHER = TXT("Chris Oldwood");
+//! The configuration data application name.
+const tchar* APPLICATION = TXT("XML Editor");
+//! The configuration data format version.
+const tchar* CONFIG_VERSION = TXT("1.0");
 
 //! The maximum size of the MRU list.
-const int MRU_LIST_SIZE = ID_FILE_MRU_4-ID_FILE_MRU_1+1;
+const int MRU_LIST_SIZE = ID_FILE_MRU_9-ID_FILE_MRU_1+1;
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
@@ -55,8 +63,16 @@ bool TheApp::OnOpen()
 	// Set the app title.
 	m_strTitle = TXT("XML Editor");
 
-	// Load settings.
-	LoadConfig();
+	try
+	{
+		// Load settings.
+		LoadConfig();
+	}
+	catch (const Core::Exception& e)
+	{
+		FatalMsg(TXT("Failed to configure the application:-\n\n%s"), e.What());
+		return false;
+	}
 	
 	// Load the toolbar bitmap.
 	m_rCmdControl.CmdBitmap().LoadRsc(IDR_APPTOOLBAR);
@@ -82,8 +98,16 @@ bool TheApp::OnOpen()
 
 bool TheApp::OnClose()
 {
-	// Save settings.
-	SaveConfig();
+	try
+	{
+		// Save settings.
+		SaveConfig();
+	}
+	catch (const Core::Exception& e)
+	{
+		FatalMsg(TXT("Failed to save the application configuration:-\n\n%s"), e.What());
+		return false;
+	}
 
 	return true;
 }
@@ -139,25 +163,30 @@ const tchar* TheApp::DefFileExt() const
 
 void TheApp::LoadConfig()
 {
-	CIniFile oIniFile;
+	CBusyCursor    busyCursor;
+	WCL::AppConfig appConfig(PUBLISHER, APPLICATION);
 
-	// Read the file version.
-	CString strVer = oIniFile.ReadString(TXT("Version"), TXT("Version"), INI_FILE_VER);
+	// Read the config data version.
+	tstring version = appConfig.readString(appConfig.DEFAULT_SECTION, TXT("Version"), CONFIG_VERSION);
+
+	if (version != CONFIG_VERSION)
+		throw Core::ConfigurationException(Core::Fmt(TXT("The configuration data is incompatible - '%s'"), version.c_str()));
 
 	// Read the MRU list.
-	m_MRUList.Load(oIniFile);
+	m_MRUList.Read(appConfig);
 
 	// Read the UI settings.
-	m_rcLastPos = oIniFile.ReadRect(TXT("UI"), TXT("MainWindow"), m_rcLastPos);
-	m_eDefLayout = static_cast<TheView::Layout>(oIniFile.ReadUInt(TXT("UI"), TXT("Layout"), m_eDefLayout));
-	m_nDefSplitPos = oIniFile.ReadUInt(TXT("UI"), TXT("SplitterPos"), m_nDefSplitPos);
+	m_rcLastPos = appConfig.readValue<CRect>(TXT("UI"), TXT("MainWindow"), m_rcLastPos);
+	m_eDefLayout = static_cast<TheView::Layout>(appConfig.readValue<int>(TXT("UI"), TXT("Layout"), m_eDefLayout));
+	m_nDefSplitPos = appConfig.readValue<uint>(TXT("UI"), TXT("SplitterPos"), m_nDefSplitPos);
 
-	CStrArray astrWidths = oIniFile.ReadStrings(TXT("UI"), TXT("AttribWidths"), TXT(','), TXT("100, 100"));
+	WCL::AppConfig::StringArray widths;
+	appConfig.readList(TXT("UI"), TXT("AttribWidths"), TXT("100, 100"), widths);
 
-	if (astrWidths.Size() == m_vecDefColWidths.size())
+	if (widths.size() == m_vecDefColWidths.size())
 	{
 		for (size_t i = 0; i < m_vecDefColWidths.size(); ++i)
-			m_vecDefColWidths[i] = tatoi(astrWidths[i]);
+			m_vecDefColWidths[i] = Core::parse<uint>(widths[i]);
 	}
 
 	// Validate.
@@ -176,22 +205,23 @@ void TheApp::LoadConfig()
 
 void TheApp::SaveConfig()
 {
-	CIniFile oIniFile;
+	CBusyCursor    busyCursor;
+	WCL::AppConfig appConfig(PUBLISHER, APPLICATION);
 
-	// Write the file version.
-	oIniFile.WriteString(TXT("Version"), TXT("Version"), INI_FILE_VER);
+	// Write the config data version.
+	appConfig.writeString(appConfig.DEFAULT_SECTION, TXT("Version"), CONFIG_VERSION);
 
 	// Save the MRU list.
-	m_MRUList.Save(oIniFile);
+	m_MRUList.Write(appConfig);
 
-	CStrArray astrWidths;
+	WCL::AppConfig::StringArray widths;
 
 	for (Widths::const_iterator itWidth = m_vecDefColWidths.begin(); itWidth != m_vecDefColWidths.end(); ++itWidth)
-		astrWidths.Add(CStrCvt::FormatUInt(*itWidth));
+		widths.push_back(Core::format<uint>(*itWidth));
 
 	// Write the UI settings.
-	oIniFile.WriteRect(TXT("UI"), TXT("MainWindow"), m_rcLastPos);
-	oIniFile.WriteUInt(TXT("UI"), TXT("Layout"), m_eDefLayout);
-	oIniFile.WriteUInt(TXT("UI"), TXT("SplitterPos"), m_nDefSplitPos);
-	oIniFile.WriteStrings(TXT("UI"), TXT("AttribWidths"), TXT(','), astrWidths);
+	appConfig.writeValue<CRect>(TXT("UI"), TXT("MainWindow"), m_rcLastPos);
+	appConfig.writeValue<uint>(TXT("UI"), TXT("Layout"), m_eDefLayout);
+	appConfig.writeValue<uint>(TXT("UI"), TXT("SplitterPos"), m_nDefSplitPos);
+	appConfig.writeList(TXT("UI"), TXT("AttribWidths"), widths);
 }
