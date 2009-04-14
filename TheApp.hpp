@@ -35,7 +35,7 @@ public:
 	TheDoc* Document() const;
 
 	//! The array of ListView column widths.
-	typedef std::vector<uint> Widths;
+	typedef std::vector<size_t> Widths;
 
 	//
 	// Application objects..

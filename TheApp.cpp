@@ -217,7 +217,7 @@ void TheApp::SaveConfig()
 	WCL::AppConfig::StringArray widths;
 
 	for (Widths::const_iterator itWidth = m_vecDefColWidths.begin(); itWidth != m_vecDefColWidths.end(); ++itWidth)
-		widths.push_back(Core::format<uint>(*itWidth));
+		widths.push_back(Core::format<size_t>(*itWidth));
 
 	// Write the UI settings.
 	appConfig.writeValue<CRect>(TXT("UI"), TXT("MainWindow"), m_rcLastPos);
