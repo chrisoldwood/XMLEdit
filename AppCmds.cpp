@@ -139,7 +139,7 @@ void AppCmds::OnEditFind()
 		}
 		catch (const Core::Exception& e)
 		{
-			App.FatalMsg(TXT("Failed to evaluate the XPath expression:-\n\n%s"), e.What());
+			App.FatalMsg(TXT("Failed to evaluate the XPath expression:-\n\n%s"), e.twhat());
 			return;
 		}
 
@@ -210,16 +210,16 @@ void AppCmds::OnViewNodePath()
 	// Derive the simple path.
 	XML::NodePtr pNode = App.Document()->View()->Selection();
 
-	while (pNode.Get() != nullptr)
+	while (pNode.get() != nullptr)
 	{
-		if (pNode->Type() == XML::ELEMENT_NODE)
+		if (pNode->type() == XML::ELEMENT_NODE)
 		{
 			XML::ElementNodePtr pElemNode = Core::static_ptr_cast<XML::ElementNode>(pNode);
 
-			strPath = TXT("/") + pElemNode->Name() + strPath;
+			strPath = TXT("/") + pElemNode->name() + strPath;
 		}
 
-		pNode = pNode->Parent();
+		pNode = pNode->parent();
 	}
 
 	// Display it.

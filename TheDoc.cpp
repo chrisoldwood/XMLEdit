@@ -58,12 +58,12 @@ bool TheDoc::Load()
 		XML::Reader oReader;
 
 		// Parse the XML file.
-		m_pDOM = oReader.ReadDocument(strContents.begin(), strContents.end(), XML::Reader::DISCARD_WHITESPACE);
+		m_pDOM = oReader.readDocument(strContents.begin(), strContents.end(), XML::Reader::DISCARD_WHITESPACE);
 	}
 	catch (const Core::Exception& e)
 	{
 		// Notify user.
-		CApp::This().m_rMainWnd.AlertMsg(TXT("Failed to open the XML document:-\n\n%s"), e.What());
+		CApp::This().m_rMainWnd.AlertMsg(TXT("Failed to open the XML document:-\n\n%s"), e.twhat());
 		return false;
 	}
 
@@ -81,7 +81,7 @@ bool TheDoc::Save()
 	catch (const Core::Exception& e)
 	{
 		// Notify user.
-		CApp::This().m_rMainWnd.AlertMsg(TXT("Failed to save the XML document:-\n\n%s"), e.What());
+		CApp::This().m_rMainWnd.AlertMsg(TXT("Failed to save the XML document:-\n\n%s"), e.twhat());
 		return false;
 	}
 

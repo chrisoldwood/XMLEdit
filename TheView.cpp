@@ -170,9 +170,9 @@ void TheView::OnNodeSelected(NMTREEVIEW& oMsg)
 
 	XML::NodePtr pNode = m_tvNodeTree.GetItemNode(oMsg.itemNew.hItem);
 
-	ASSERT(pNode.Get() != nullptr);
+	ASSERT(pNode.get() != nullptr);
 
-	XML::NodeType eType = pNode->Type();
+	XML::NodeType eType = pNode->type();
 
 	// Has attributes?
 	if ( (eType == XML::ELEMENT_NODE) || (eType == XML::PROCESSING_NODE) )
@@ -182,11 +182,11 @@ void TheView::OnNodeSelected(NMTREEVIEW& oMsg)
 		// Extract the attributes.
 		if (eType == XML::ELEMENT_NODE)
 		{
-			vAttribs = Core::static_ptr_cast<XML::ElementNode>(pNode)->GetAttributes();
+			vAttribs = Core::static_ptr_cast<XML::ElementNode>(pNode)->getAttributes();
 		}
 		else if (eType == XML::PROCESSING_NODE)
 		{
-			vAttribs = Core::static_ptr_cast<XML::ProcessingNode>(pNode)->GetAttributes();
+			vAttribs = Core::static_ptr_cast<XML::ProcessingNode>(pNode)->getAttributes();
 		}
 		else
 		{
@@ -198,13 +198,13 @@ void TheView::OnNodeSelected(NMTREEVIEW& oMsg)
 
 		m_lvAttributes.DeleteAllItems();
 
-		for (XML::Attributes::const_iterator it = vAttribs.Begin(); it != vAttribs.End(); ++it)
+		for (XML::Attributes::const_iterator it = vAttribs.begin(); it != vAttribs.end(); ++it)
 		{
 			const XML::AttributePtr& pAttribute = *it;
 
 			size_t n = m_lvAttributes.ItemCount();
-			m_lvAttributes.InsertItem(n,    pAttribute->Name().c_str());
-			m_lvAttributes.ItemText  (n, 1, pAttribute->Value().c_str());
+			m_lvAttributes.InsertItem(n,    pAttribute->name().c_str());
+			m_lvAttributes.ItemText  (n, 1, pAttribute->value().c_str());
 		}
 	}
 	// Is content?
@@ -216,19 +216,19 @@ void TheView::OnNodeSelected(NMTREEVIEW& oMsg)
 		// Extract text value.
 		if (eType == XML::TEXT_NODE)
 		{
-			strText = Core::static_ptr_cast<XML::TextNode>(pNode)->Text();
+			strText = Core::static_ptr_cast<XML::TextNode>(pNode)->text();
 		}
 		else if (eType == XML::COMMENT_NODE)
 		{
-			strText = Core::static_ptr_cast<XML::CommentNode>(pNode)->Comment();
+			strText = Core::static_ptr_cast<XML::CommentNode>(pNode)->comment();
 		}
 		else if (eType == XML::DOCTYPE_NODE)
 		{
-			strText = Core::static_ptr_cast<XML::DocTypeNode>(pNode)->Declaration();
+			strText = Core::static_ptr_cast<XML::DocTypeNode>(pNode)->declaration();
 		}
 		else if (eType == XML::CDATA_NODE)
 		{
-			strText = Core::static_ptr_cast<XML::CDataNode>(pNode)->Text();
+			strText = Core::static_ptr_cast<XML::CDataNode>(pNode)->text();
 		}
 		else
 		{

@@ -67,9 +67,9 @@ void XmlTreeView::Refresh()
 	XML::DocumentPtr pDOM    = m_oView.Document().DOM();
 	tstring          strItem = TXT("DOM");
 
-	ASSERT(pDOM.Get() != nullptr);
+	ASSERT(pDOM.get() != nullptr);
 
-	HTREEITEM hRoot = InsertRootItem(strItem, pDOM->HasChildren(), 0);
+	HTREEITEM hRoot = InsertRootItem(strItem, pDOM->hasChildren(), 0);
 
 	AddItemNodeMapping(hRoot, pDOM);
 
@@ -82,10 +82,10 @@ void XmlTreeView::Refresh()
 void XmlTreeView::AddItemNodeMapping(HTREEITEM hItem, const XML::NodePtr& pNode)
 {
 	ASSERT(m_mapItemNode.find(hItem)       == m_mapItemNode.end());
-	ASSERT(m_mapNodeItem.find(pNode.Get()) == m_mapNodeItem.end());
+	ASSERT(m_mapNodeItem.find(pNode.get()) == m_mapNodeItem.end());
 
-	m_mapItemNode.insert(std::make_pair(hItem, pNode.Get()));
-	m_mapNodeItem.insert(std::make_pair(pNode.Get(), hItem));
+	m_mapItemNode.insert(std::make_pair(hItem, pNode.get()));
+	m_mapNodeItem.insert(std::make_pair(pNode.get(), hItem));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -105,7 +105,7 @@ XML::NodePtr XmlTreeView::GetItemNode(HTREEITEM hItem) const
 
 HTREEITEM XmlTreeView::GetNodeItem(const XML::NodePtr& pNode) const
 {
-	NodeItemMap::const_iterator it = m_mapNodeItem.find(pNode.Get());
+	NodeItemMap::const_iterator it = m_mapNodeItem.find(pNode.get());
 
 	ASSERT(it != m_mapNodeItem.end());
 
@@ -132,16 +132,16 @@ void XmlTreeView::AddNodeTree(HTREEITEM hParent, const XML::NodeContainer& oCont
 	typedef XML::NodeContainer::const_iterator CIter;
 
 	// Add all children to the parent node.
-	for (CIter it = oContainer.BeginChild(); it != oContainer.EndChild(); ++it)
+	for (CIter it = oContainer.beginChild(); it != oContainer.endChild(); ++it)
 	{
 		const XML::NodePtr& pNode = *it;
 
 		HTREEITEM hItem = AddNode(hParent, pNode);
 
 		// If a container node, recursively add it's sub-tree.
-		if (pNode->Type() == XML::DOCUMENT_NODE)
+		if (pNode->type() == XML::DOCUMENT_NODE)
 			AddNodeTree(hItem, *Core::static_ptr_cast<XML::Document>(pNode));
-		else if (pNode->Type() == XML::ELEMENT_NODE)
+		else if (pNode->type() == XML::ELEMENT_NODE)
 			AddNodeTree(hItem, *Core::static_ptr_cast<XML::ElementNode>(pNode));
 	}
 }
@@ -166,8 +166,8 @@ HTREEITEM XmlTreeView::AddNode(HTREEITEM hParent, const XML::NodePtr& pNode)
 
 void XmlTreeView::UpdateNode(HTREEITEM hItem, const XML::NodePtr& pNode)
 {
-	XML::NodeType eType        = pNode->Type();
-	tstring       strItem      = pNode->TypeStr();
+	XML::NodeType eType        = pNode->type();
+	tstring       strItem      = pNode->typeStr();
 	bool          bHasChildren = false;
 	int           nImage       = -1;
 
@@ -176,17 +176,17 @@ void XmlTreeView::UpdateNode(HTREEITEM hItem, const XML::NodePtr& pNode)
 	{
 		XML::DocumentPtr pDoc = Core::static_ptr_cast<XML::Document>(pNode);
 
-		bHasChildren = pDoc->HasChildren();
+		bHasChildren = pDoc->hasChildren();
 		nImage       = 0;
 	}
 	else if (eType == XML::ELEMENT_NODE)
 	{
 		XML::ElementNodePtr pElement = Core::static_ptr_cast<XML::ElementNode>(pNode);
 
-		strItem      = pElement->Name();
+		strItem      = pElement->name();
 		strItem     += TXT(' ');
-		strItem     += MakeAttribSummary(pElement->GetAttributes());
-		bHasChildren = pElement->HasChildren();
+		strItem     += MakeAttribSummary(pElement->getAttributes());
+		bHasChildren = pElement->hasChildren();
 		nImage       = 1;
 
 		PostProcessSummary(strItem);
@@ -195,7 +195,7 @@ void XmlTreeView::UpdateNode(HTREEITEM hItem, const XML::NodePtr& pNode)
 	{
 		XML::TextNodePtr pText = Core::static_ptr_cast<XML::TextNode>(pNode);
 
-		strItem = pText->Text();
+		strItem = pText->text();
 		nImage  = 6;
 
 		PostProcessSummary(strItem);
@@ -208,9 +208,9 @@ void XmlTreeView::UpdateNode(HTREEITEM hItem, const XML::NodePtr& pNode)
 	{
 		XML::ProcessingNodePtr pProcInst = Core::static_ptr_cast<XML::ProcessingNode>(pNode);
 
-		strItem  = pProcInst->Target();
+		strItem  = pProcInst->target();
 		strItem += TXT(' ');
-		strItem += MakeAttribSummary(pProcInst->GetAttributes());
+		strItem += MakeAttribSummary(pProcInst->getAttributes());
 		nImage   = 4;
 
 		PostProcessSummary(strItem);
@@ -245,16 +245,16 @@ tstring XmlTreeView::MakeAttribSummary(XML::Attributes& vAttribs)
 	tstring str;
 
 	// For all attributes...
-	for (ConstIter it = vAttribs.Begin(); it != vAttribs.End(); ++it)
+	for (ConstIter it = vAttribs.begin(); it != vAttribs.end(); ++it)
 	{
 		const XML::AttributePtr& pAttrib = *it;
 
 		if (!str.empty())
 			str += TXT(' ');
 
-		str += pAttrib->Name();
+		str += pAttrib->name();
 		str += TXT("=\"");
-		str += pAttrib->Value();
+		str += pAttrib->value();
 		str += TXT("\"");
 	}
 
