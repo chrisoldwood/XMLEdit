@@ -90,7 +90,7 @@ bool TheApp::OnOpen()
 	// Update UI.
 	m_oAppCmds.UpdateUI();
 
-	return true;
+	return CSDIApp::OnOpen();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
