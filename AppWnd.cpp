@@ -11,8 +11,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-AppWnd::AppWnd()
+AppWnd::AppWnd(WCL::IMsgThread& thread, WCL::ICmdController& controller)
 	: CSDIFrame(IDR_APPICON)
+	, m_oToolbar(thread, controller)
 {
 }
 

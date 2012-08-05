@@ -38,6 +38,8 @@ const int MRU_LIST_SIZE = ID_FILE_MRU_9-ID_FILE_MRU_1+1;
 
 TheApp::TheApp()
 	: CSDIApp(m_oAppWnd, m_oAppCmds, MRU_LIST_SIZE)
+	, m_oAppWnd(m_MainThread, m_oAppCmds)
+	, m_oAppCmds()
 	, m_nDefMaxItemLen(150)
 	, m_eDefLayout(TheView::VERTICAL)
 	, m_nDefSplitPos(0)
@@ -74,9 +76,6 @@ bool TheApp::OnOpen()
 		return false;
 	}
 	
-	// Load the toolbar bitmap.
-	m_rCmdControl.CmdBitmap().LoadRsc(IDR_APPTOOLBAR);
-
 	// Create the main window.
 	if (!m_oAppWnd.Create())
 		return false;
@@ -88,7 +87,7 @@ bool TheApp::OnOpen()
 	m_oAppWnd.Show(m_iCmdShow);
 
 	// Update UI.
-	m_oAppCmds.UpdateUI();
+	m_oAppCmds.InitialiseUI();
 
 	return CSDIApp::OnOpen();
 }
