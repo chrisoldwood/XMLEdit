@@ -39,7 +39,7 @@ const int MRU_LIST_SIZE = ID_FILE_MRU_9-ID_FILE_MRU_1+1;
 TheApp::TheApp()
 	: CSDIApp(m_oAppWnd, m_oAppCmds, MRU_LIST_SIZE)
 	, m_oAppWnd(m_MainThread, m_oAppCmds)
-	, m_oAppCmds()
+	, m_oAppCmds(m_oAppWnd)
 	, m_nDefMaxItemLen(150)
 	, m_eDefLayout(TheView::VERTICAL)
 	, m_nDefSplitPos(0)
@@ -81,7 +81,7 @@ bool TheApp::OnOpen()
 		return false;
 
 	// Show it.
-	if (ShowNormal() && !m_rcLastPos.Empty())
+	if (!m_rcLastPos.Empty())
 		m_oAppWnd.Move(m_rcLastPos);
 
 	m_oAppWnd.Show(m_iCmdShow);
