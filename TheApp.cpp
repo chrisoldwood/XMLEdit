@@ -180,7 +180,7 @@ void TheApp::LoadConfig()
 	m_nDefSplitPos = appConfig.readValue<uint>(TXT("UI"), TXT("SplitterPos"), m_nDefSplitPos);
 
 	WCL::AppConfig::StringArray widths;
-	appConfig.readList(TXT("UI"), TXT("AttribWidths"), TXT("100, 100"), widths);
+	appConfig.readStringList(TXT("UI"), TXT("AttribWidths"), TXT("100, 100"), widths);
 
 	if (widths.size() == m_vecDefColWidths.size())
 	{
@@ -222,5 +222,5 @@ void TheApp::SaveConfig()
 	appConfig.writeValue<CRect>(TXT("UI"), TXT("MainWindow"), m_rcLastPos);
 	appConfig.writeValue<uint>(TXT("UI"), TXT("Layout"), m_eDefLayout);
 	appConfig.writeValue<uint>(TXT("UI"), TXT("SplitterPos"), m_nDefSplitPos);
-	appConfig.writeList(TXT("UI"), TXT("AttribWidths"), widths);
+	appConfig.writeStringList(TXT("UI"), TXT("AttribWidths"), widths);
 }
