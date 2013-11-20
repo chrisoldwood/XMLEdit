@@ -8,6 +8,8 @@
 
 - Change the app icon.
 
-- Support loading of files from the command line (Explorer Open With...)
-
 - Empty elements with attributes show as folders (should they be shown as leaf nodes?)
+
+- Support editing
+
+- Support saving

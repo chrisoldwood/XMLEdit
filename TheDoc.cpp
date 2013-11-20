@@ -49,16 +49,11 @@ bool TheDoc::Load()
 {
 	try
 	{
-		CString    strContents;
-		TextFormat eFormat;
+		CString strContents;
 
-		// Read the entire file.
-		CFile::ReadTextFile(m_Path, strContents, eFormat);
+		CFile::ReadTextFile(m_Path, strContents);
 
-		XML::Reader oReader;
-
-		// Parse the XML file.
-		m_pDOM = oReader.readDocument(strContents.begin(), strContents.end(), XML::Reader::DISCARD_WHITESPACE);
+		m_pDOM = XML::Reader::readDocument(strContents.begin(), strContents.end(), XML::Reader::DISCARD_WHITESPACE);
 	}
 	catch (const Core::Exception& e)
 	{
@@ -77,6 +72,7 @@ bool TheDoc::Save()
 {
 	try
 	{
+		ASSERT_FALSE();
 	}
 	catch (const Core::Exception& e)
 	{
