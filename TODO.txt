@@ -13,3 +13,9 @@
 - Support editing
 
 - Support saving
+
+- Bug: Status bar doesn't clear when moving over the main window
+
+- Bug: Processing instructions should have free form content, not attributes
+
+- Detect quotes in attribute values and use alternate form

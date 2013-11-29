@@ -1,0 +1,15 @@
+<?xml?>
+<root>
+	<!-- a comment -->
+    <parent attribute='single quotes'>
+		<?ProcessingInstruction?>
+	    <child attribute="double quotes"/>
+	</parent>
+	<![CDATA[ <cdata section> ]]>
+	<text>single line text</text>
+	<paragraph>
+	multi-line
+	text
+	block
+	</paragraph>
+</root>

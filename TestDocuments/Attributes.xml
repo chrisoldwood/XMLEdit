@@ -1,0 +1,3 @@
+<parent single='quotes' embedded='"double"quotes"'>
+    <child double="quotes" embedded="'single'quotes'"/>
+</parent>

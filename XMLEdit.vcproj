@@ -248,6 +248,22 @@
 				RelativePath=".\HelpFile\XMLEdit.html">
 			</File>
 		</Filter>
+		<Filter
+			Name="Test Documents"
+			Filter="">
+			<File
+				RelativePath=".\TestDocuments\Attributes.xml">
+			</File>
+			<File
+				RelativePath=".\TestDocuments\Empty.xml">
+			</File>
+			<File
+				RelativePath=".\TestDocuments\Full.xml">
+			</File>
+			<File
+				RelativePath=".\TestDocuments\RootOnly.xml">
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt">
 		</File>
