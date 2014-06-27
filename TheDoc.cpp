@@ -10,6 +10,7 @@
 #include <WCL/FrameWnd.hpp>
 #include <WCL/File.hpp>
 #include <XML/Reader.hpp>
+#include <XML/Writer.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
@@ -72,7 +73,9 @@ bool TheDoc::Save()
 {
 	try
 	{
-		ASSERT_FALSE();
+		CString contents = XML::Writer::writeDocument(m_pDOM).c_str();
+
+		CFile::WriteTextFile(m_Path, contents, ANSI_TEXT);
 	}
 	catch (const Core::Exception& e)
 	{
