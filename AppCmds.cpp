@@ -29,12 +29,12 @@ AppCmds::AppCmds(AppWnd& appWnd)
 	DEFINE_CMD_TABLE
 		// File menu.
 		CMD_ENTRY(ID_FILE_NEW,					&AppCmds::OnFileNew,		&AppCmds::OnUIFileNew,		 0)
-		CMD_ENTRY(ID_FILE_OPEN,					&AppCmds::OnFileOpen,		NULL,						 1)
+		CMD_ENTRY(ID_FILE_OPEN,					&AppCmds::OnFileOpen,		nullptr,					 1)
 		CMD_ENTRY(ID_FILE_SAVE,					&AppCmds::OnFileSave,		&AppCmds::OnUIFileSave,		 2)
 		CMD_ENTRY(ID_FILE_SAVEAS,				&AppCmds::OnFileSaveAs,		&AppCmds::OnUIFileSaveAs,	-1)
 		CMD_ENTRY(ID_FILE_CLOSE,				&AppCmds::OnFileClose,		&AppCmds::OnUIFileClose,	 1)
 		CMD_RANGE(ID_MRU_FIRST,	ID_MRU_LAST,	&AppCmds::OnFileOpenMRU,	&AppCmds::OnUIFileOpenMRU,	-1)
-		CMD_ENTRY(ID_FILE_EXIT,					&AppCmds::OnFileExit,		NULL,						-1)
+		CMD_ENTRY(ID_FILE_EXIT,					&AppCmds::OnFileExit,		nullptr,					-1)
 		// Edit menu.
 		CMD_ENTRY(ID_EDIT_FIND,					&AppCmds::OnEditFind,		&AppCmds::OnUIEditFind,		-1)
 		CMD_ENTRY(ID_EDIT_FIND_NEXT,			&AppCmds::OnEditFindNext,	&AppCmds::OnUIEditFindNext,	-1)
@@ -43,7 +43,7 @@ AppCmds::AppCmds(AppWnd& appWnd)
 		CMD_ENTRY(ID_VIEW_VERT,					&AppCmds::OnViewVert,		&AppCmds::OnUIViewVert,		-1)
 		CMD_ENTRY(ID_VIEW_NODE_PATH,			&AppCmds::OnViewNodePath,	&AppCmds::OnUIViewNodePath,	-1)
 		// Help menu.
-		CMD_ENTRY(ID_HELP_ABOUT,				&AppCmds::OnHelpAbout,		NULL,						10)
+		CMD_ENTRY(ID_HELP_ABOUT,				&AppCmds::OnHelpAbout,		nullptr,					10)
 	END_CMD_TABLE
 }
 
